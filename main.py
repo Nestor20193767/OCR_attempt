@@ -3,7 +3,7 @@ from PIL import Image
 import easyocr
 
 # Título de la aplicación
-st.title("OCR con Streamlit y EasyOCR")
+st.title("Escaner de texto por Imagenes by Néstor")
 
 # Cargar la imagen desde el usuario
 imagen_subida = st.file_uploader("Sube una imagen", type=["jpg", "jpeg", "png"])
