@@ -3,3 +3,6 @@ pytesseract
 pillow 
 torch
 easyocr
+whatkit 
+folium 
+streamlit-folium
