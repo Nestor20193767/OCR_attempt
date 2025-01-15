@@ -1,55 +1,111 @@
 import streamlit as st
-import pywhatkit as pwk
-import folium
-from streamlit_folium import st_folium
+import pandas as pd
+from datetime import datetime
 
-# Función para enviar el mensaje de WhatsApp
-def send_whatsapp_message(message, phone_number, location=None):
-    if location:
-        lat, lon = location
-        # Crear un enlace de Google Maps
-        location_link = f'https://www.google.com/maps?q={lat},{lon}'
-        message += f' Puedes ver la ubicación aquí: {location_link}'
-        
-    # Enviar mensaje usando pywhatkit
-    # Establece la hora de envío (en formato de 24 horas, por ejemplo, 14:30 para las 2:30 PM)
-    # La función sendwhatmsg_envía el mensaje automáticamente a la hora indicada.
-    # Se debe proporcionar un número de teléfono, con el código de país.
-    pwk.sendwhatmsg_instantly(f'whatsapp://{phone_number}', message)
+# Configuración inicial de Streamlit
+st.set_page_config(page_title="Gestión de Proyectos", page_icon="📝")
 
-# Función para mostrar el mapa
-def show_map(lat, lon):
-    # Crear el mapa
-    map = folium.Map(location=[lat, lon], zoom_start=12)
-    folium.Marker([lat, lon], popup="Ubicación enviada").add_to(map)
-    # Mostrar el mapa en Streamlit
-    st_folium(map, width=700, height=500)
+# Inicializar datos si no existen en el estado de la sesión
+if "projects" not in st.session_state:
+    st.session_state.projects = []
 
-# Interfaz de Streamlit
-st.title('Enviar mensaje de WhatsApp con ubicación')
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# Entrada del mensaje
-message = st.text_area('Escribe tu mensaje')
+if "notes" not in st.session_state:
+    st.session_state.notes = []
 
-# Entrada de la ubicación
-lat = st.number_input('Latitud', value=0.0)
-lon = st.number_input('Longitud', value=0.0)
+# Función para agregar un proyecto
+def add_project(name):
+    st.session_state.projects.append({
+        "id": len(st.session_state.projects) + 1,
+        "name": name,
+        "timestamp": datetime.now()
+    })
 
-# Número de teléfono (debe ser en formato internacional)
-phone_number = st.text_input('Número de teléfono (incluye el código de país)', '+1234567890')
+# Función para agregar un mensaje
+def add_message(content, project_id):
+    st.session_state.messages.append({
+        "id": len(st.session_state.messages) + 1,
+        "content": content,
+        "project_id": project_id,
+        "timestamp": datetime.now(),
+        "pinned": False,
+        "archived": False
+    })
 
-# Enviar el mensaje
-if st.button('Enviar mensaje'):
-    if message and phone_number:
-        if lat != 0.0 and lon != 0.0:
-            # Mostrar el mapa con la ubicación
-            show_map(lat, lon)
-            # Enviar el mensaje con la ubicación
-            send_whatsapp_message(message, phone_number, location=(lat, lon))
-            st.success('¡Mensaje enviado con éxito!')
+# Función para agregar una nota
+def add_note(content):
+    st.session_state.notes.append({
+        "id": len(st.session_state.notes) + 1,
+        "content": content,
+        "timestamp": datetime.now()
+    })
+
+# Encabezado principal
+st.title("Gestión de Proyectos")
+
+# Sección para crear un nuevo proyecto
+st.header("Crear un Nuevo Proyecto")
+with st.form("new_project_form"):
+    project_name = st.text_input("Nombre del Proyecto:")
+    project_submit = st.form_submit_button("Crear Proyecto")
+
+    if project_submit and project_name:
+        add_project(project_name)
+        st.success(f"Proyecto '{project_name}' creado exitosamente.")
+
+# Mostrar proyectos existentes
+st.header("Proyectos Existentes")
+if st.session_state.projects:
+    project_names = [proj["name"] for proj in st.session_state.projects]
+    project_selected = st.selectbox("Selecciona un Proyecto", options=project_names)
+
+    # Mostrar mensajes relacionados con el proyecto seleccionado
+    if project_selected:
+        st.subheader(f"Mensajes para el Proyecto: {project_selected}")
+        project_id = next(proj["id"] for proj in st.session_state.projects if proj["name"] == project_selected)
+        project_messages = [msg for msg in st.session_state.messages if msg["project_id"] == project_id]
+
+        if project_messages:
+            for msg in project_messages:
+                st.markdown(f"`{msg['timestamp']}` - {msg['content']}")
+
+                # Opciones de fijar y archivar
+                pinned = st.checkbox("📌 Fijar", value=msg["pinned"], key=f"pinned-{msg['id']}")
+                archived = st.checkbox("🗑️ Archivar", value=msg["archived"], key=f"archived-{msg['id']}")
+
+                msg["pinned"] = pinned
+                msg["archived"] = archived
         else:
-            # Enviar mensaje sin ubicación
-            send_whatsapp_message(message, phone_number)
-            st.success('¡Mensaje enviado sin ubicación!')
-    else:
-        st.error('Por favor, ingresa un mensaje y un número de teléfono.')
+            st.info("No hay mensajes para este proyecto.")
+
+        # Agregar nuevo mensaje al proyecto seleccionado
+        st.subheader("Agregar Mensaje")
+        new_message = st.text_area("Escribe un mensaje:")
+        if st.button("Agregar Mensaje"):
+            if new_message:
+                add_message(new_message, project_id)
+                st.success("Mensaje agregado exitosamente.")
+            else:
+                st.warning("Escribe un mensaje antes de enviarlo.")
+else:
+    st.info("No hay proyectos disponibles. Crea uno nuevo arriba.")
+
+# Sección de notas
+st.header("Notas")
+with st.form("new_note_form"):
+    note_content = st.text_area("Escribe una nota:")
+    note_submit = st.form_submit_button("Agregar Nota")
+
+    if note_submit and note_content:
+        add_note(note_content)
+        st.success("Nota agregada exitosamente.")
+
+# Mostrar todas las notas
+if st.session_state.notes:
+    for note in st.session_state.notes:
+        st.info(note["content"])
+else:
+    st.info("No hay notas disponibles.")
+
