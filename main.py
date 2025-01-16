@@ -43,7 +43,7 @@ if page == "Ventas":
             st.subheader("Productos añadidos")
             if not ventas_df.empty:
                 # Mostrar el DataFrame sin índice
-                st.dataframe(ventas_df.style.hide_index(), use_container_width=True)
+                st.dataframe(hide_index=True, use_container_width=True)
             else:
                 st.write("No hay productos añadidos todavía.")
 
