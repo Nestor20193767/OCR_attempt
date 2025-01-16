@@ -9,7 +9,7 @@ dia = hoy.day
 @st.dialog("Mostrar tu texto")
 def show_text_dialog(text):
     st.write(text)
-    st.session_state.texto = 'existente'
+    #st.session_state.texto = 'existente'
         
 
 
