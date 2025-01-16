@@ -4,75 +4,61 @@ from datetime import datetime
 
 
 
-# Función para mostrar el modal
+import streamlit as st
+
+# Función para mostrar la ventana emergente (modal)
 def show_modal():
-    with st.container():
-        st.markdown(
-            """
-            <style>
-            .modal {
-                display: block;
-                position: fixed;
-                z-index: 1;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgb(0,0,0);
-                background-color: rgba(0,0,0,0.4);
-                padding-top: 60px;
-            }
-            .modal-content {
-                background-color: #fefefe;
-                margin: 5% auto;
-                padding: 20px;
-                border: 1px solid #888;
-                width: 80%;
-                text-align: center;
-            }
-            .close {
-                color: #aaa;
-                float: right;
-                font-size: 28px;
-                font-weight: bold;
-            }
-            .close:hover,
-            .close:focus {
-                color: black;
-                text-decoration: none;
-                cursor: pointer;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            """
-            <div id="modal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="document.getElementById('modal').style.display='none'">&times;</span>
-                    <h2>¡Esta es la ventana emergente!</h2>
-                    <p>Contenido adicional aquí.</p>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+    # Definir el HTML y CSS para el modal
+    modal_html = """
+    <style>
+    .modal {
+        display: block;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+        padding-top: 60px;
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        text-align: center;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    </style>
 
-# Verificar si el estado del modal debe ser visible
-if "modal_visible" not in st.session_state:
-    st.session_state.modal_visible = False
+    <div class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementsByClassName('modal')[0].style.display='none'">&times;</span>
+            <h2>¡Esta es la ventana emergente!</h2>
+            <p>Contenido adicional de la ventana emergente aquí.</p>
+        </div>
+    </div>
+    """
+    st.markdown(modal_html, unsafe_allow_html=True)
 
-# Botón para mostrar el modal
+# Mostrar la ventana emergente al presionar un botón
 if st.button("Mostrar ventana emergente"):
-    st.session_state.modal_visible = True
-
-# Mostrar el modal si está activado
-if st.session_state.modal_visible:
     show_modal()
-    if st.button("Cerrar"):
-        st.session_state.modal_visible = False
+
 
 
 
