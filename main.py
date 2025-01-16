@@ -15,7 +15,8 @@ def show_text_dialog(text):
 
 texto = st.text_input("Escribe algo...")
 boton = st.button("Got it")
-if boton & dia == 16:
+if boton:
+    if dia == 16:
         show_text_dialog(texto)
     
 
