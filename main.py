@@ -46,13 +46,43 @@ if page == "Ventas":
                 texto_ventas += f"Producto: {venta['Producto']}\n"
                 texto_ventas += f"Precio Unitario: S/. {venta['Precio Unitario']}\n"
                 texto_ventas += f"Cantidad: {venta['Cantidad']}\n"
-                texto_ventas += "-" * 50 + "\n"  # Línea divisoria
+                texto_ventas += "-" * 80 + "\n"  # Línea divisoria
             
             # Calcular el número de líneas para ajustar la altura
             num_lineas = len(texto_ventas.split("\n"))
-            altura_text_area = max(150, num_lineas * 20)  # Altura mínima de 100 px, 20 px por línea
+            altura_text_area = max(150, num_lineas * 20)  # Altura mínima de 150 px, 20 px por línea
             
             st.text_area("Lista de Productos", value=texto_ventas, height=altura_text_area, disabled=True)
+            
+            # Sección de pago
+            st.subheader("Método de Pago")
+            pago = st.radio("Selecciona método de pago", ("YAPE", "Efectivo"))
+            
+            if pago == "YAPE":
+                if st.button("Realizar Venta"):
+                    st.success("Venta realizada con éxito mediante YAPE.")
+                    st.session_state.ventas.clear()  # Limpiar la lista de productos después de la venta
+            elif pago == "Efectivo":
+                # Calcular el precio total
+                total = sum([venta['Precio Unitario'] * venta['Cantidad'] for venta in st.session_state.ventas])
+                total = round(total, 2)
+                
+                # Mostrar calculadora para efectivo
+                monto_recibido = st.number_input(f"Total: S/. {total} - Monto Recibido", min_value=total, value=total, step=0.1)
+                
+                if monto_recibido > total:
+                    vuelto = round(monto_recibido - total, 2)
+                    st.write(f"**Vuelto a devolver:** S/. {vuelto}")
+                elif monto_recibido == total:
+                    st.write("**Pago Exacto. No hay vuelto.**")
+                else:
+                    st.warning("El monto recibido es menor que el total. Asegúrate de ingresar la cantidad correcta.")
+                
+                # Botón para realizar venta
+                if st.button("Realizar Venta"):
+                    st.success("Venta realizada con éxito mediante Efectivo.")
+                    st.session_state.ventas.clear()  # Limpiar la lista de productos después de la venta
+
 
 
 
