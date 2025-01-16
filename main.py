@@ -4,32 +4,11 @@ from datetime import datetime
 
 
 
-# Función para mostrar notificación
-def show_notification():
-    notification_js = """
-    <script>
-        if (Notification.permission === "granted") {
-            new Notification("¡Notificación de Streamlit!", {
-                body: "Esta es una notificación de ejemplo",
-                icon: "https://via.placeholder.com/150"
-            });
-        } else if (Notification.permission !== "denied") {
-            Notification.requestPermission().then(function(permission) {
-                if (permission === "granted") {
-                    new Notification("¡Notificación de Streamlit!", {
-                        body: "Esta es una notificación de ejemplo",
-                        icon: "https://via.placeholder.com/150"
-                    });
-                }
-            });
-        }
-    </script>
-    """
-    st.markdown(notification_js, unsafe_allow_html=True)
+with st.popover("Open popover"):
+    st.markdown("Hello World 👋")
+    name = st.text_input("What's your name?")
 
-# Mostrar un botón para activar la notificación
-if st.button("Mostrar notificación"):
-    show_notification()
+st.write("Your name:", name
 
 
 
