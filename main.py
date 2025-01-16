@@ -6,22 +6,25 @@ from datetime import datetime
 
 
 
-@st.dialog("Cast your vote")
-def vote(item):
-    st.write(f"Why is {item} your favorite?")
-    reason = st.text_input("Because...")
-    if st.button("Submit"):
-        st.session_state.vote = {"item": item, "reason": reason}
-        st.rerun()
 
-if "vote" not in st.session_state:
-    st.write("Vote for your favorite")
-    if st.button("A"):
-        vote("A")
-    if st.button("B"):
-        vote("B")
+# Crear el diálogo de Streamlit
+@st.dialog("Mostrar tu texto")
+def show_text_dialog():
+    # Crear un campo de entrada para texto
+    user_text = st.text_input("Escribe algo aquí...")
+    
+    # Cuando el usuario presiona el botón, mostrar el texto en el diálogo
+    if st.button("Mostrar en el diálogo"):
+        st.session_state.user_message = user_text
+        st.rerun()  # Recargar la aplicación para mostrar el mensaje en el diálogo
+
+# Verificar si ya hay un mensaje guardado en el estado de sesión
+if "user_message" not in st.session_state:
+    st.write("Ingresa un texto y presiona el botón para mostrarlo en el diálogo.")
 else:
-    f"You voted for {st.session_state.vote['item']} because {st.session_state.vote['reason']}"
+    # Mostrar el mensaje ingresado en el diálogo
+    st.write(f"Tu mensaje es: {st.session_state.user_message}")
+
 
 
 
