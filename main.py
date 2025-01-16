@@ -9,9 +9,8 @@ from datetime import datetime
 @st.dialog("Mostrar tu texto")
 def show_text_dialog(text):
     st.write(text)
-    if st.button("Genial"):
-        st.session_state.texto = 'existente'
-        st.rerun
+    st.session_state.texto = 'existente'
+        
 
 if "texto" not in st.session_state:
     texto = st.text_input("Escribe algo...")
