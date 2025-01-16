@@ -46,9 +46,9 @@ if page == "Ventas":
                 texto_ventas += f"Producto: {venta['Producto']}\n"
                 texto_ventas += f"Precio Unitario: S/. {venta['Precio Unitario']}\n"
                 texto_ventas += f"Cantidad: {venta['Cantidad']}\n"
-                texto_ventas += "-" * 20 + "\n"  # Línea divisoria
+                texto_ventas += "-" * 50 + "\n"  # Línea divisoria
             
-            st.text_area("Lista de Productos", value=texto_ventas, height=200)
+            st.text_area("Lista de Productos", value=texto_ventas, disabled= True)
 
 
 
