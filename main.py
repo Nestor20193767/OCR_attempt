@@ -1,35 +1,51 @@
 import streamlit as st
-from jnius import autoclass
+from smartcard.System import readers
+from smartcard.util import toHexString
 
-def nfc_init():
+def list_readers():
+    available_readers = readers()
+    if not available_readers:
+        return None
+    return available_readers
+
+def read_card(reader):
     try:
-        # Importar las clases de Android necesarias a través de Pyjnius
-        PythonActivity = autoclass('org.kivy.android.PythonActivity')
-        NfcAdapter = autoclass('android.nfc.NfcAdapter')
+        # Abrir la conexión con el lector de tarjetas
+        connection = reader.createConnection()
+        connection.connect()
 
-        # Obtener el contexto de la actividad de Android
-        context = PythonActivity.mActivity
+        # Comando APDU para seleccionar un archivo en la tarjeta (esto puede variar dependiendo de la tarjeta)
+        command = [0x00, 0xA4, 0x04, 0x00, 0x00]  # Comando de selección de archivo
+        response, sw1, sw2 = connection.transmit(command)
 
-        # Obtener el adaptador NFC
-        nfc_adapter = NfcAdapter.getDefaultAdapter(context)
-
-        if nfc_adapter is None:
-            st.error("El dispositivo no tiene soporte NFC.")
-        else:
-            if nfc_adapter.isEnabled():
-                st.success("Adaptador NFC inicializado y habilitado.")
-            else:
-                st.warning("El adaptador NFC está deshabilitado. Por favor, habilítelo en la configuración.")
+        # Mostrar la respuesta de la tarjeta en formato hexadecimal
+        return toHexString(response), f"Estado de la respuesta: {sw1} {sw2}"
     except Exception as e:
-        st.error(f"Error al inicializar el adaptador NFC: {e}")
+        return None, f"Error al leer la tarjeta: {str(e)}"
 
-# Crear la interfaz de Streamlit
-st.title("Interfaz NFC con Streamlit y Pyjnius")
-st.write("Este ejemplo intenta inicializar el adaptador NFC en un dispositivo Android.")
+# Título de la aplicación Streamlit
+st.title("Interfaz de Lectura de Tarjetas Inteligentes")
 
-# Botón para inicializar NFC
-if st.button("Inicializar Adaptador NFC"):
-    nfc_init()
+# Listar los lectores disponibles
+available_readers = list_readers()
+
+if available_readers is None:
+    st.write("No se encontraron lectores de tarjetas.")
+else:
+    # Mostrar la lista de lectores y permitir al usuario seleccionar uno
+    reader_names = [reader.name for reader in available_readers]
+    selected_reader_name = st.selectbox("Selecciona un lector de tarjetas:", reader_names)
+
+    # Leer la tarjeta con el lector seleccionado
+    selected_reader = next(reader for reader in available_readers if reader.name == selected_reader_name)
+    if st.button("Leer Tarjeta"):
+        response, status = read_card(selected_reader)
+
+        if response:
+            st.write(f"Respuesta de la tarjeta: {response}")
+        else:
+            st.write(status)
+
     
 
 
