@@ -7,4 +7,4 @@ pywhatkit
 folium 
 streamlit-folium
 streamlit-modal
-pyscard
+
