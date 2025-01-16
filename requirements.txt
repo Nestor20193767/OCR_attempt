@@ -6,3 +6,4 @@ easyocr
 pywhatkit 
 folium 
 streamlit-folium
+streamlit-modal
