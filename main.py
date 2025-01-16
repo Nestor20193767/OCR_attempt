@@ -5,25 +5,28 @@ from datetime import datetime
 
 
 
-
-
-# Crear el diálogo de Streamlit
+# Función para mostrar el diálogo con el texto escrito
 @st.dialog("Mostrar tu texto")
 def show_text_dialog():
-    # Crear un campo de entrada para texto
-    user_text = st.text_input("Escribe algo aquí...")
-    
-    # Cuando el usuario presiona el botón, mostrar el texto en el diálogo
-    if st.button("Mostrar en el diálogo"):
-        st.session_state.user_message = user_text
-        st.rerun()  # Recargar la aplicación para mostrar el mensaje en el diálogo
+    if "user_message" in st.session_state:
+        # Mostrar el mensaje que se ingresó previamente en el cuadro de texto
+        st.write(f"Tu mensaje es: {st.session_state.user_message}")
+    else:
+        st.write("No has ingresado ningún texto aún.")
 
-# Verificar si ya hay un mensaje guardado en el estado de sesión
-if "user_message" not in st.session_state:
-    st.write("Ingresa un texto y presiona el botón para mostrarlo en el diálogo.")
-else:
-    # Mostrar el mensaje ingresado en el diálogo
-    st.write(f"Tu mensaje es: {st.session_state.user_message}")
+# Mostrar la interfaz principal para escribir y un botón
+st.write("Ingresa un texto y presiona el botón para mostrarlo en el diálogo.")
+
+user_text = st.text_input("Escribe algo aquí...")
+
+# Botón para activar el diálogo y mostrar el texto escrito
+if st.button("Mostrar en el diálogo"):
+    if user_text:  # Si hay texto ingresado
+        st.session_state.user_message = user_text
+        st.rerun()  # Recargar la página para activar el diálogo y mostrar el texto
+    else:
+        st.write("Por favor, ingresa algo antes de presionar el botón.")
+
 
 
 
