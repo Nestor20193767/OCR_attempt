@@ -39,13 +39,17 @@ if page == "Ventas":
                     })
         
         with col2:
-            # Mostrar los productos añadidos
+            # Mostrar los productos añadidos en un text_area
             st.subheader("Productos añadidos")
+            texto_ventas = ""
             for venta in st.session_state.ventas:
-                st.write(f"**Producto:** {venta['Producto']}")
-                st.write(f"**Precio Unitario:** S/. {venta['Precio Unitario']}")
-                st.write(f"**Cantidad:** {venta['Cantidad']}")
-                st.divider()  # Línea divisoria entre productos
+                texto_ventas += f"Producto: {venta['Producto']}\n"
+                texto_ventas += f"Precio Unitario: S/. {venta['Precio Unitario']}\n"
+                texto_ventas += f"Cantidad: {venta['Cantidad']}\n"
+                texto_ventas += "-" * 20 + "\n"  # Línea divisoria
+            
+            st.text_area("Lista de Productos", value=texto_ventas, height=200)
+
 
 
 
