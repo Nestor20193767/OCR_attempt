@@ -23,6 +23,7 @@ user_text = st.text_input("Escribe algo aquí...")
 if st.button("Mostrar en el diálogo"):
     if user_text:  # Si hay texto ingresado
         st.session_state.user_message = user_text
+        show_text_dialog()
         st.rerun()  # Recargar la página para activar el diálogo y mostrar el texto
     else:
         st.write("Por favor, ingresa algo antes de presionar el botón.")
