@@ -48,7 +48,11 @@ if page == "Ventas":
                 texto_ventas += f"Cantidad: {venta['Cantidad']}\n"
                 texto_ventas += "-" * 50 + "\n"  # Línea divisoria
             
-            st.text_area("Lista de Productos", value=texto_ventas, disabled= True)
+            # Calcular el número de líneas para ajustar la altura
+            num_lineas = len(texto_ventas.split("\n"))
+            altura_text_area = max(100, num_lineas * 20)  # Altura mínima de 100 px, 20 px por línea
+            
+            st.text_area("Lista de Productos", value=texto_ventas, height=altura_text_area, disabled=True)
 
 
 
