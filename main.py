@@ -4,20 +4,76 @@ from datetime import datetime
 
 
 
-from streamlit_modal import Modal
+# Función para mostrar el modal
+def show_modal():
+    with st.container():
+        st.markdown(
+            """
+            <style>
+            .modal {
+                display: block;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgb(0,0,0);
+                background-color: rgba(0,0,0,0.4);
+                padding-top: 60px;
+            }
+            .modal-content {
+                background-color: #fefefe;
+                margin: 5% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+                text-align: center;
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            """
+            <div id="modal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="document.getElementById('modal').style.display='none'">&times;</span>
+                    <h2>¡Esta es la ventana emergente!</h2>
+                    <p>Contenido adicional aquí.</p>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-# Crea el modal
-modal = Modal("Mi ventana emergente")
+# Verificar si el estado del modal debe ser visible
+if "modal_visible" not in st.session_state:
+    st.session_state.modal_visible = False
 
-# Botón para mostrar la ventana emergente
+# Botón para mostrar el modal
 if st.button("Mostrar ventana emergente"):
-    modal.open()
+    st.session_state.modal_visible = True
 
-# Contenido del modal
-with modal.container():
-    st.write("¡Esta es la ventana emergente!")
+# Mostrar el modal si está activado
+if st.session_state.modal_visible:
+    show_modal()
     if st.button("Cerrar"):
-        modal.close()
+        st.session_state.modal_visible = False
+
 
 
 # Configuración inicial de Streamlit
