@@ -2,6 +2,29 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
+
+
+# Función para mostrar la ventana modal
+def show_modal():
+    with st.expander("Ventana Emergente", expanded=True):
+        st.write("¡Esta es la ventana emergente!")
+        if st.button("Cerrar"):
+            st.session_state.modal_visible = False
+
+# Verificar si la ventana modal debe mostrarse
+if "modal_visible" not in st.session_state:
+    st.session_state.modal_visible = False
+
+# Botón para mostrar la ventana emergente
+if st.button("Mostrar ventana emergente"):
+    st.session_state.modal_visible = True
+
+# Mostrar la ventana modal si está activada
+if st.session_state.modal_visible:
+    show_modal()
+
+
+
 # Configuración inicial de Streamlit
 st.set_page_config(page_title="Gestión de Proyectos", page_icon="📝")
 
