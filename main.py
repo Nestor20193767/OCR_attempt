@@ -46,7 +46,7 @@ if page == "Ventas":
                 texto_ventas += f"Producto: {venta['Producto']}\n"
                 texto_ventas += f"Precio Unitario: S/. {venta['Precio Unitario']}\n"
                 texto_ventas += f"Cantidad: {venta['Cantidad']}\n"
-                texto_ventas += "-" * 80 + "\n"  # Línea divisoria
+                texto_ventas += "-" * 60 + "\n"  # Línea divisoria
             
             # Calcular el número de líneas para ajustar la altura
             num_lineas = len(texto_ventas.split("\n"))
@@ -54,7 +54,8 @@ if page == "Ventas":
             
             st.text_area("Lista de Productos", value=texto_ventas, height=altura_text_area, disabled=True)
             
-            # Sección de pago
+        with col1:
+             # Sección de pago
             st.subheader("Método de Pago")
             pago = st.radio("Selecciona método de pago", ("YAPE", "Efectivo"))
             
