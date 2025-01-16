@@ -15,9 +15,8 @@ import nfc
 clf = nfc.ContactlessFrontend()
 
 # Obtener la lista de dispositivos NFC disponibles
-devices = clf.open()
 
-st.write(devices)
+st.write(clf)
 
 texto = st.text_input("Escribe algo...")
 boton = st.button("Got it")
