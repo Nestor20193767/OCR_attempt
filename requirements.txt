@@ -7,5 +7,4 @@ pywhatkit
 folium 
 streamlit-folium
 streamlit-modal
-nfcpy
-libusb
+pyjnius
