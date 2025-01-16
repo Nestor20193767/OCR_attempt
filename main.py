@@ -7,9 +7,8 @@ stock_data = pd.DataFrame({
     "Precio (S/.)": [3.5, 1.0, 5.0]
 })
 
-# Inicializar session_state para las ventas
-if "ventas" not in st.session_state:
-    st.session_state.ventas = []
+# Crear un DataFrame vacío para almacenar las ventas
+ventas_df = pd.DataFrame(columns=["Producto", "Precio Unitario (S/.)", "Cantidad", "Total (S/.)"])
 
 # Página de ventas
 page = "Ventas"
@@ -31,22 +30,23 @@ if page == "Ventas":
                 add_button = st.form_submit_button("Añadir Producto")
                 
                 if add_button:
-                    # Añadir la venta al session_state
-                    st.session_state.ventas.append({
+                    # Agregar la venta al DataFrame
+                    nueva_fila = {
                         "Producto": producto_vendido,
                         "Precio Unitario (S/.)": precio_venta,
                         "Cantidad": cantidad_vendida,
                         "Total (S/.)": precio_venta * cantidad_vendida
-                    })
+                    }
+                    ventas_df = pd.concat([ventas_df, pd.DataFrame([nueva_fila])], ignore_index=True)
         
         with col2:
             st.subheader("Productos añadidos")
-            if st.session_state.ventas:
-                # Crear un DataFrame con las ventas
-                ventas_df = pd.DataFrame(st.session_state.ventas)
-                st.dataframe(ventas_df, use_container_width=True)
+            if not ventas_df.empty:
+                # Mostrar el DataFrame sin índice
+                st.dataframe(ventas_df.style.hide_index(), use_container_width=True)
             else:
                 st.write("No hay productos añadidos todavía.")
+
 
 
     
