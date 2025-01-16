@@ -4,60 +4,33 @@ from datetime import datetime
 
 
 
-import streamlit as st
-
-# Función para mostrar la ventana emergente (modal)
-def show_modal():
-    # Definir el HTML y CSS para el modal
-    modal_html = """
-    <style>
-    .modal {
-        display: block;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.4);
-        padding-top: 60px;
-    }
-    .modal-content {
-        background-color: #fefefe;
-        margin: 5% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        text-align: center;
-    }
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    </style>
-
-    <div class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="document.getElementsByClassName('modal')[0].style.display='none'">&times;</span>
-            <h2>¡Esta es la ventana emergente!</h2>
-            <p>Contenido adicional de la ventana emergente aquí.</p>
-        </div>
-    </div>
+# Función para mostrar notificación
+def show_notification():
+    notification_js = """
+    <script>
+        if (Notification.permission === "granted") {
+            new Notification("¡Notificación de Streamlit!", {
+                body: "Esta es una notificación de ejemplo",
+                icon: "https://via.placeholder.com/150"
+            });
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === "granted") {
+                    new Notification("¡Notificación de Streamlit!", {
+                        body: "Esta es una notificación de ejemplo",
+                        icon: "https://via.placeholder.com/150"
+                    });
+                }
+            });
+        }
+    </script>
     """
-    st.markdown(modal_html, unsafe_allow_html=True)
+    st.markdown(notification_js, unsafe_allow_html=True)
 
-# Mostrar la ventana emergente al presionar un botón
-if st.button("Mostrar ventana emergente"):
-    show_modal()
+# Mostrar un botón para activar la notificación
+if st.button("Mostrar notificación"):
+    show_notification()
+
 
 
 
