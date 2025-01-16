@@ -14,7 +14,10 @@ def show_text_dialog(text):
 import nfc
 clf = nfc.ContactlessFrontend()
 
-st.write(clf)
+# Obtener la lista de dispositivos NFC disponibles
+devices = clf.list_devices()
+
+st.write(devices)
 
 texto = st.text_input("Escribe algo...")
 boton = st.button("Got it")
