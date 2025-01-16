@@ -11,7 +11,10 @@ def show_text_dialog(text):
     st.write(text)
     #st.session_state.texto = 'existente'
         
+import nfc
+clf = nfc.ContactlessFrontend()
 
+st.write(clf)
 
 texto = st.text_input("Escribe algo...")
 boton = st.button("Got it")
