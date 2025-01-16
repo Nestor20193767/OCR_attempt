@@ -14,7 +14,7 @@ def show_text_dialog(text):
         st.rerun
 
 if "texto" not in st.session_state:
-    texto = st.text("Escribe algo...")
+    texto = st.text_input("Escribe algo...")
     boton = st.button("Got it")
     if boton:
         show_text_dialog(texto)
