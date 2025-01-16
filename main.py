@@ -7,8 +7,9 @@ stock_data = pd.DataFrame({
     "Precio (S/.)": [3.5, 1.0, 5.0]
 })
 
-# Crear un DataFrame vacío para almacenar las ventas
-ventas_df = pd.DataFrame(columns=["Producto", "Precio Unitario (S/.)", "Cantidad", "Total (S/.)"])
+# Inicializar session_state para las ventas
+if "ventas" not in st.session_state:
+    st.session_state.ventas = []
 
 # Página de ventas
 page = "Ventas"
@@ -30,26 +31,22 @@ if page == "Ventas":
                 add_button = st.form_submit_button("Añadir Producto")
                 
                 if add_button:
-                    # Agregar la venta al DataFrame
-                    nueva_fila = {
+                    # Añadir la venta al session_state
+                    st.session_state.ventas.append({
                         "Producto": producto_vendido,
-                        "Precio Unitario (S/.)": precio_venta,
-                        "Cantidad": cantidad_vendida,
-                        "Total (S/.)": precio_venta * cantidad_vendida
-                    }
-                    ventas_df = pd.concat([ventas_df, pd.DataFrame([nueva_fila])], ignore_index=True)
+                        "Precio Unitario": precio_venta,
+                        "Cantidad": cantidad_vendida
+                    })
         
         with col2:
+            # Mostrar los productos añadidos
             st.subheader("Productos añadidos")
-            if not ventas_df.empty:
-                # Mostrar el DataFrame sin índice
-                st.dataframe(hide_index=True, use_container_width=True)
-            else:
-                st.write("No hay productos añadidos todavía.")
+            for venta in st.session_state.ventas:
+                st.write(f"**Producto:** {venta['Producto']}")
+                st.write(f"**Precio Unitario:** S/. {venta['Precio Unitario']}")
+                st.write(f"**Cantidad:** {venta['Cantidad']}")
+                st.divider()  # Línea divisoria entre productos
 
-
-
-    
 
 
 
