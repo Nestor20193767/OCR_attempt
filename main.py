@@ -15,7 +15,7 @@ import nfc
 clf = nfc.ContactlessFrontend()
 
 # Obtener la lista de dispositivos NFC disponibles
-devices = clf.list_devices()
+devices = clf.open()
 
 st.write(devices)
 
