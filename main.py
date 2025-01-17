@@ -1,5 +1,5 @@
 from streamlit_elements import nivo
-from streamlit_elements import elements, dashboard, html, nivo
+from streamlit_elements import elements, dashboard, html, nivo, mui
 
 import streamlit as st
 
