@@ -9,3 +9,4 @@ streamlit-folium
 streamlit-modal
 requests 
 beautifulsoup4
+pytz
