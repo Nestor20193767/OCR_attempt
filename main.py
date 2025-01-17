@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_elements import elements, mui, html, dashboard, media, sync
+from streamlit_elements import elements, mui, html, dashboard, sync
 
 # Configuración inicial del diseño de la cuadrícula
 layout = [
@@ -21,7 +21,7 @@ with elements("widgets_dashboard"):
         with mui.Paper(key="pie_chart", elevation=3):
             with mui.CardContent():
                 mui.Typography("Pie Chart", variant="h6", className="draggable")
-                media.Chart(
+                elements.Chart(
                     type="pie",
                     options={"responsive": True},
                     data={
@@ -58,7 +58,7 @@ with elements("widgets_dashboard"):
         with mui.Paper(key="radar_chart", elevation=3):
             with mui.CardContent():
                 mui.Typography("Radar Chart", variant="h6", className="draggable")
-                media.Chart(
+                elements.Chart(
                     type="radar",
                     options={"responsive": True},
                     data={
@@ -126,11 +126,6 @@ with elements("widgets_dashboard"):
                         ),
                     ),
                 )
-
-
-
-
-
 
 
 
