@@ -1,21 +1,31 @@
 import streamlit as st
-from streamlit_elements import elements, mui, html
+from streamlit_elements import elements, mui, dashboard
 
-st.title("Streamlit Elements Demo")
+# Dashboard Layout Configuration
+layout = [
+    dashboard.Item("card1", 0, 0, 6, 2),  # (item_id, x, y, width, height)
+    dashboard.Item("card2", 6, 0, 6, 2),
+]
 
-# Use the elements context to render the components
-with elements("demo"):
-    # Add a Material-UI Card component
-    with mui.Card(elevation=3):
-        with mui.CardContent():
-            mui.Typography("Hello, this is a Material-UI card!", variant="h5", gutterBottom=True)
-            mui.Button("Click Me", variant="contained", color="primary")
+# Sidebar and Title
+st.sidebar.title("Dashboard Configuration")
+st.title("Interactive Dashboard with Streamlit Elements")
 
-    # Add an HTML component
-    html.div(
-        "This is an HTML element!",
-        style={"color": "blue", "fontSize": "20px", "marginTop": "20px"}
-    )
+# Render Dashboard
+with elements("dashboard"):
+    # Initialize the dashboard grid
+    with dashboard.Grid(layout, draggableHandle=".draggable"):
+        # First Card
+        with mui.Card(key="card1", elevation=3):
+            with mui.CardContent():
+                mui.Typography("Card 1", variant="h5", gutterBottom=True)
+                mui.Button("Button in Card 1", variant="contained", color="primary")
+
+        # Second Card
+        with mui.Card(key="card2", elevation=3):
+            with mui.CardContent():
+                mui.Typography("Card 2", variant="h5", gutterBottom=True)
+                mui.TextField(label="Input in Card 2", variant="outlined")
 
 
 
