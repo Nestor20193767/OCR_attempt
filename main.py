@@ -33,6 +33,13 @@ with elements("movable_cards"):
                 mui.Typography("Carta 3", variant="h5", gutterBottom=True)
                 mui.Button("Botón 3", variant="contained", color="success")
 
+        with mui.Card(key="card1", elevation=3):
+            with mui.CardContent():
+                mui.Typography("Carta Movible 1", variant="h5", gutterBottom=True)
+                mui.Button("Botón 1", variant="contained", color="primary")
+                html.div("⬍", className="draggable", style={"cursor": "move", "marginTop": "10px"})
+
+
 
 
 
