@@ -1,134 +1,48 @@
+import requests
 import streamlit as st
-from streamlit_elements import elements, mui, html, dashboard, sync
+from base64 import b64encode
+from streamlit_elements import elements, dashboard, html
 
-# Configuración inicial del diseño de la cuadrícula
-layout = [
-    dashboard.Item("pie_chart", 0, 0, 6, 4),
-    dashboard.Item("card_content", 6, 0, 6, 4),
-    dashboard.Item("radar_chart", 0, 4, 6, 4),
-    dashboard.Item("data_grid", 6, 4, 6, 4),
+st.set_page_config(layout="wide")
+
+# Some random image URL.
+images_url = [
+    "https://unsplash.com/photos/1CsaVdwfIew/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjUxNTE3OTQx&force=true&w=1920",
+    "https://unsplash.com/photos/eHlVZcSrjfg/download?force=true&w=1920",
+    "https://unsplash.com/photos/CSs8aiN_LkI/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjUxNTE2ODM1&force=true&w=1920",
+    "https://unsplash.com/photos/GJ8ZQV7eGmU/download?force=true&w=1920",
 ]
 
-# Título de la aplicación
-st.title("Streamlit Elements - Widgets Movibles")
+# Download these images and get their bytes.
+images_bytes = [requests.get(url).content for url in images_url]
 
-# Contexto de streamlit-elements
-with elements("widgets_dashboard"):
-    # Crear un dashboard con widgets movibles y redimensionables
-    with dashboard.Grid(layout, draggableHandle=".draggable", resizable=True):
-        
-        # Widget: Pie Chart
-        with mui.Paper(key="pie_chart", elevation=3):
-            with mui.CardContent():
-                mui.Typography("Pie Chart", variant="h6", className="draggable")
-                elements.Chart(
-                    type="pie",
-                    options={"responsive": True},
-                    data={
-                        "labels": ["Java", "Rust", "Scala", "Ruby", "Elixir"],
-                        "datasets": [
-                            {
-                                "data": [485, 140, 300, 430, 360],
-                                "backgroundColor": [
-                                    "#FF6384",
-                                    "#36A2EB",
-                                    "#FFCE56",
-                                    "#4BC0C0",
-                                    "#9966FF",
-                                ],
-                            }
-                        ],
-                    },
-                )
-        
-        # Widget: Card Content
-        with mui.Paper(key="card_content", elevation=3):
-            with mui.CardContent():
-                mui.Typography("Card Content", variant="h6", className="draggable")
-                mui.Typography(
-                    "This impressive paella is a perfect party dish and fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.",
-                    variant="body1",
-                )
-                html.img(
-                    src="https://via.placeholder.com/400x200.png?text=Example+Image",
-                    style={"width": "100%", "borderRadius": "8px"},
-                )
-        
-        # Widget: Radar Chart
-        with mui.Paper(key="radar_chart", elevation=3):
-            with mui.CardContent():
-                mui.Typography("Radar Chart", variant="h6", className="draggable")
-                elements.Chart(
-                    type="radar",
-                    options={"responsive": True},
-                    data={
-                        "labels": ["Fruity", "Bitter", "Heavy", "Strong", "Sunny"],
-                        "datasets": [
-                            {
-                                "label": "Chardonnay",
-                                "data": [12, 19, 3, 5, 2],
-                                "borderColor": "rgba(255,99,132,1)",
-                                "backgroundColor": "rgba(255,99,132,0.2)",
-                            },
-                            {
-                                "label": "Carmenere",
-                                "data": [10, 15, 6, 8, 5],
-                                "borderColor": "rgba(54,162,235,1)",
-                                "backgroundColor": "rgba(54,162,235,0.2)",
-                            },
-                        ],
-                    },
-                )
-        
-        # Widget: Data Grid
-        with mui.Paper(key="data_grid", elevation=3):
-            with mui.CardContent():
-                mui.Typography("Data Grid", variant="h6", className="draggable")
-                mui.TableContainer(
-                    mui.Table(
-                        mui.TableHead(
-                            mui.TableRow(
-                                [
-                                    mui.TableCell("ID"),
-                                    mui.TableCell("First Name"),
-                                    mui.TableCell("Last Name"),
-                                    mui.TableCell("Age"),
-                                ]
-                            )
-                        ),
-                        mui.TableBody(
-                            [
-                                mui.TableRow(
-                                    [
-                                        mui.TableCell("1"),
-                                        mui.TableCell("Jon"),
-                                        mui.TableCell("Snow"),
-                                        mui.TableCell("35"),
-                                    ]
-                                ),
-                                mui.TableRow(
-                                    [
-                                        mui.TableCell("2"),
-                                        mui.TableCell("Cersei"),
-                                        mui.TableCell("Lannister"),
-                                        mui.TableCell("42"),
-                                    ]
-                                ),
-                                mui.TableRow(
-                                    [
-                                        mui.TableCell("3"),
-                                        mui.TableCell("Jaime"),
-                                        mui.TableCell("Lannister"),
-                                        mui.TableCell("45"),
-                                    ]
-                                ),
-                            ]
-                        ),
-                    ),
-                )
+# Encode these bytes to base 64.
+images_b64 = [b64encode(bytes).decode() for bytes in images_bytes]
 
+# Initialize a layout for our dashboard.
+# It's gonna be a 2x2 grid, with each element being of height 3 and width 6 out of 12.
+layout = [
+    dashboard.Item("image0", 0, 0, 6, 3),
+    dashboard.Item("image1", 6, 0, 6, 3),
+    dashboard.Item("image2", 0, 3, 6, 3),
+    dashboard.Item("image3", 6, 3, 6, 3),
+]
 
-
+with elements("image_grid"):
+    with dashboard.Grid(layout):
+        # We iterate over our images encoded as base64.
+        # enumerate() will return the item's index i from 0 to 3, so I can generate
+        # dashboard layout keys from "image0" to "image3".
+        for i, b64 in enumerate(images_b64):
+            html.img(
+                # We pass our base 64 to <img src=...></img> to display our image.
+                # See: https://stackoverflow.com/a/8499716
+                src=f"data:image/png;base64,{b64}",
+                # A simple CSS style to avoid image distortion on resize.
+                css={"object-fit": "cover"},
+                # We set the key to bind our image to a dashboard item.
+                key=f"image{i}",
+            )
 
 
 
