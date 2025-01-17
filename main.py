@@ -1,6 +1,8 @@
 from streamlit_elements import nivo
 from streamlit_elements import elements, dashboard, html, nivo
 
+import streamlit as st
+
 with elements("nivo_charts"):
 
     # Streamlit Elements includes 45 dataviz components powered by Nivo.
