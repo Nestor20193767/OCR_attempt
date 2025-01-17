@@ -1,8 +1,11 @@
+from streamlit_elements import nivo
+from streamlit_elements import elements, dashboard, html, nivo
+
 with elements("nivo_charts"):
 
     # Streamlit Elements includes 45 dataviz components powered by Nivo.
 
-    from streamlit_elements import nivo
+    
 
     DATA = [
         { "taste": "fruity", "chardonay": 93, "carmenere": 61, "syrah": 114 },
