@@ -1,31 +1,37 @@
 import streamlit as st
 from streamlit_elements import elements, mui, dashboard
 
-# Dashboard Layout Configuration
+# Configuración inicial del diseño de la cuadrícula
 layout = [
-    dashboard.Item("card1", 0, 0, 6, 2),  # (item_id, x, y, width, height)
-    dashboard.Item("card2", 6, 0, 6, 2),
+    dashboard.Item("card1", 0, 0, 4, 2),  # id, x, y, ancho, alto
+    dashboard.Item("card2", 4, 0, 4, 2),
+    dashboard.Item("card3", 8, 0, 4, 2),
 ]
 
-# Sidebar and Title
-st.sidebar.title("Dashboard Configuration")
-st.title("Interactive Dashboard with Streamlit Elements")
+# Título de la aplicación
+st.title("Cartas Movibles con Streamlit Elements")
 
-# Render Dashboard
-with elements("dashboard"):
-    # Initialize the dashboard grid
-    with dashboard.Grid(layout, draggableHandle=".draggable"):
-        # First Card
+# Contexto de elementos
+with elements("movable_cards"):
+    # Crear una cuadrícula movible
+    with dashboard.Grid(layout, draggableHandle=".draggable", resizable=True):
+        # Primera Carta
         with mui.Card(key="card1", elevation=3):
             with mui.CardContent():
-                mui.Typography("Card 1", variant="h5", gutterBottom=True)
-                mui.Button("Button in Card 1", variant="contained", color="primary")
+                mui.Typography("Carta 1", variant="h5", gutterBottom=True)
+                mui.Button("Botón 1", variant="contained", color="primary")
 
-        # Second Card
+        # Segunda Carta
         with mui.Card(key="card2", elevation=3):
             with mui.CardContent():
-                mui.Typography("Card 2", variant="h5", gutterBottom=True)
-                mui.TextField(label="Input in Card 2", variant="outlined")
+                mui.Typography("Carta 2", variant="h5", gutterBottom=True)
+                mui.Button("Botón 2", variant="contained", color="secondary")
+
+        # Tercera Carta
+        with mui.Card(key="card3", elevation=3):
+            with mui.CardContent():
+                mui.Typography("Carta 3", variant="h5", gutterBottom=True)
+                mui.Button("Botón 3", variant="contained", color="success")
 
 
 
