@@ -10,8 +10,16 @@ def create_reminder_papers(df):
     """
     st.title("Recordatorios")
 
+    # Use session state to track updates to the DataFrame
+    if "df" not in st.session_state:
+        st.session_state.df = df
+
+    # Function to mark a reminder as completed
+    def mark_completed(index):
+        st.session_state.df.loc[index, 'Estado'] = True
+
     with elements("mui-papers"):
-        for idx, row in df.iterrows():
+        for idx, row in st.session_state.df.iterrows():
             # Generate a unique key for each paper
             unique_key = f"reminder-{idx}"
             
@@ -25,9 +33,12 @@ def create_reminder_papers(df):
                 
                 # Show "Completado" button only if Estado is False
                 if not row['Estado']:
-                    if mui.Button("Completado", color="primary").click():
-                        df.loc[idx, 'Estado'] = True
-                        st.experimental_rerun()
+                    # Pass the index to the onClick handler
+                    mui.Button(
+                        "Completado",
+                        color="primary",
+                        onClick=lambda idx=idx: mark_completed(idx)
+                    )
                 else:
                     mui.Typography("Estado: Completado", color="green", variant="body2")
 
