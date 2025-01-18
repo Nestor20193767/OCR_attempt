@@ -67,17 +67,13 @@ def create_reminder_papers_with_scroll(df):
 
 # Example usage
 data = {
-    "Recordatorio": [f"Tarea {i}" for i in range(1, 21)],  # 20 reminders
-    "Fecha": [f"2025-01-{str(i).zfill(2)}" for i in range(1, 21)],
-    "Estado": [False] * 20
+    "Recordatorio": [f"Tarea {i}" for i in range(1, 51)],  # 50 reminders to test scroll
+    "Fecha": [f"2025-01-{str(i % 31 + 1).zfill(2)}" for i in range(1, 51)],  # Cyclic dates
+    "Estado": [False] * 50
 }
 df = pd.DataFrame(data)
 
 # Call the function
 create_reminder_papers_with_scroll(df)
-
-
-# Call the function
-create_reminder_papers(df)
 
 
