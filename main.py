@@ -2,14 +2,14 @@ import streamlit as st
 from streamlit_elements import elements, mui
 import pandas as pd
 
-def create_reminder_papers(df):
+def create_reminder_papers_with_scroll(df):
     """
-    Generates mui.Paper elements for reminders and displays them alongside the DataFrame.
-    
+    Generates mui.Paper elements for reminders and displays them in a scrollable mui.Box.
+
     Parameters:
         df (pd.DataFrame): DataFrame with columns 'Recordatorio', 'Fecha', and 'Estado'.
     """
-    st.title("Gestor de Recordatorios")
+    st.title("Gestor de Recordatorios con Scroll")
 
     # Initialize session state for the DataFrame
     if "df" not in st.session_state:
@@ -27,40 +27,55 @@ def create_reminder_papers(df):
         st.header("Estado del DataFrame")
         st.dataframe(st.session_state.df)
 
-    # Right Column: Display the Papers
+    # Right Column: Display the Papers in a scrollable Box
     with col2:
         st.header("Recordatorios")
 
         with elements("mui-papers"):
-            for idx, row in st.session_state.df.iterrows():
-                unique_key = f"reminder-{idx}"  # Unique key for each paper
-                
-                with mui.Paper(
-                    elevation=3,
-                    sx={"padding": "16px", "marginBottom": "16px"},
-                    key=unique_key
-                ):
-                    mui.Typography(row['Recordatorio'], variant="h6")
-                    mui.Typography(f"Fecha: {row['Fecha']}", variant="body2")
+            # mui.Box with scroll
+            with mui.Box(
+                sx={
+                    "height": "400px",  # Fixed height for the box
+                    "overflowY": "scroll",  # Enable vertical scrolling
+                    "padding": "16px",
+                    "border": "1px solid #ccc",
+                    "backgroundColor": "#f9f9f9",
+                }
+            ):
+                for idx, row in st.session_state.df.iterrows():
+                    unique_key = f"reminder-{idx}"  # Unique key for each paper
                     
-                    # Show "Completado" button only if Estado is False
-                    if not row['Estado']:
-                        mui.Button(
-                            "Completado",
-                            color="primary",
-                            onClick=lambda idx=idx: mark_completed(idx)
-                        )
-                    else:
-                        mui.Typography("Estado: Completado", color="green", variant="body2")
+                    # Render each Paper
+                    with mui.Paper(
+                        elevation=3,
+                        sx={"padding": "16px", "marginBottom": "16px"},
+                        key=unique_key
+                    ):
+                        mui.Typography(row['Recordatorio'], variant="h6")
+                        mui.Typography(f"Fecha: {row['Fecha']}", variant="body2")
+                        
+                        # Show "Completado" button only if Estado is False
+                        if not row['Estado']:
+                            mui.Button(
+                                "Completado",
+                                color="primary",
+                                onClick=lambda idx=idx: mark_completed(idx)
+                            )
+                        else:
+                            mui.Typography("Estado: Completado", color="green", variant="body2")
 
 
 # Example usage
 data = {
-    "Recordatorio": ["Pagar facturas", "Llamar al médico", "Comprar regalos"],
-    "Fecha": ["2025-01-20", "2025-01-21", "2025-01-22"],
-    "Estado": [False, False, True]
+    "Recordatorio": [f"Tarea {i}" for i in range(1, 21)],  # 20 reminders
+    "Fecha": [f"2025-01-{str(i).zfill(2)}" for i in range(1, 21)],
+    "Estado": [False] * 20
 }
 df = pd.DataFrame(data)
+
+# Call the function
+create_reminder_papers_with_scroll(df)
+
 
 # Call the function
 create_reminder_papers(df)
