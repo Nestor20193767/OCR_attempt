@@ -1,82 +1,118 @@
-from streamlit_elements import nivo
-from streamlit_elements import elements, dashboard, html, nivo, mui
-
+import pandas as pd
+import random
+import datetime
 from streamlit_elements import elements, dashboard, nivo, mui
 
-# Define el layout para el dashboard
+# Crear un DataFrame con datos ficticios
+data = {
+    "Producto": [
+        "Arroz", "Frijoles", "Aceite", "Azúcar", "Café", "Leche", "Huevos", "Pan", "Pollo", "Pescado"
+    ],
+    "Cantidad": [random.randint(5, 100) for _ in range(10)],
+    "Fecha de Vencimiento": [
+        (datetime.date.today() + datetime.timedelta(days=random.randint(1, 365))).strftime('%Y-%m-%d')
+        for _ in range(10)
+    ],
+    "Precio (S/.)": [round(random.uniform(1.0, 20.0), 2) for _ in range(10)],
+}
+
+df = pd.DataFrame(data)
+
+# Layout para el dashboard
 layout = [
-    dashboard.Item("first_item", 0, 0, 2, 2),
-    dashboard.Item("second_item", 2, 0, 2, 2, isDraggable=False, moved=False),
-    dashboard.Item("third_item", 0, 2, 1, 1, isResizable=False),
-    dashboard.Item("radar_chart", 3, 2, 3, 3),  # Nuevo item para el radar chart
+    dashboard.Item("table", 0, 0, 4, 2),
+    dashboard.Item("bar_chart", 4, 0, 4, 2),
+    dashboard.Item("line_chart", 0, 2, 4, 2),
+    dashboard.Item("pie_chart", 4, 2, 4, 2),
 ]
 
 # Callback para manejar cambios en el layout
 def handle_layout_change(updated_layout):
     print("Layout actualizado:", updated_layout)
 
-# Datos para el gráfico Radar de Nivo
-DATA = [
-    {"taste": "fruity", "chardonay": 93, "carmenere": 61, "syrah": 114},
-    {"taste": "bitter", "chardonay": 91, "carmenere": 37, "syrah": 72},
-    {"taste": "heavy", "chardonay": 56, "carmenere": 95, "syrah": 99},
-    {"taste": "strong", "chardonay": 64, "carmenere": 90, "syrah": 30},
-    {"taste": "sunny", "chardonay": 119, "carmenere": 94, "syrah": 103},
+# Preparar datos para gráficos
+bar_chart_data = [
+    {"Producto": row["Producto"], "Cantidad": row["Cantidad"]}
+    for _, row in df.iterrows()
+]
+
+line_chart_data = [
+    {"Producto": row["Producto"], "Precio": row["Precio (S/.)"]}
+    for _, row in df.iterrows()
+]
+
+pie_chart_data = [
+    {"Producto": row["Producto"], "value": row["Cantidad"]}
+    for _, row in df.iterrows()
 ]
 
 # Crear el dashboard
 with elements("dashboard"):
     with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
-        # Elementos existentes
-        mui.Paper("First item", key="first_item")
-        mui.Paper("Second item (cannot drag)", key="second_item")
-        mui.Paper("Third item (cannot resize)", key="third_item")
+        # Tabla de datos
+        with mui.Box(sx={"height": 300}, key="table"):
+            mui.TableContainer(
+                mui.Table(
+                    mui.TableHead(
+                        mui.TableRow(
+                            [mui.TableCell(col) for col in df.columns]
+                        )
+                    ),
+                    mui.TableBody(
+                        mui.TableRow(
+                            [mui.TableCell(str(row[col])) for col in df.columns]
+                        ) for _, row in df.iterrows()
+                    )
+                )
+            )
         
-        # Nuevo gráfico Radar
-        with mui.Box(sx={"height": 500}, key="radar_chart"):
-            nivo.Radar(
-                data=DATA,
-                keys=["chardonay", "carmenere", "syrah"],
-                indexBy="taste",
-                valueFormat=">-.2f",
-                margin={"top": 70, "right": 80, "bottom": 40, "left": 80},
-                borderColor={"from": "color"},
-                gridLabelOffset=36,
-                dotSize=10,
-                dotColor={"theme": "background"},
-                dotBorderWidth=2,
-                motionConfig="wobbly",
-                legends=[
-                    {
-                        "anchor": "top-left",
-                        "direction": "column",
-                        "translateX": -50,
-                        "translateY": -40,
-                        "itemWidth": 80,
-                        "itemHeight": 20,
-                        "itemTextColor": "#999",
-                        "symbolSize": 12,
-                        "symbolShape": "circle",
-                        "effects": [
-                            {
-                                "on": "hover",
-                                "style": {
-                                    "itemTextColor": "#000"
-                                }
-                            }
-                        ],
-                    }
-                ],
-                theme={
-                    "background": "#FFFFFF",
-                    "textColor": "#31333F",
-                    "tooltip": {
-                        "container": {
-                            "background": "#FFFFFF",
-                            "color": "#31333F",
-                        }
-                    },
-                }
+        # Gráfico de barras (Cantidad por Producto)
+        with mui.Box(sx={"height": 300}, key="bar_chart"):
+            nivo.Bar(
+                data=bar_chart_data,
+                keys=["Cantidad"],
+                indexBy="Producto",
+                margin={"top": 50, "right": 50, "bottom": 50, "left": 60},
+                padding=0.3,
+                valueScale={"type": "linear"},
+                indexScale={"type": "band", "round": True},
+                colors={ "scheme": "nivo" },
+                axisBottom={"tickSize": 5, "tickPadding": 5, "tickRotation": 0},
+                axisLeft={"tickSize": 5, "tickPadding": 5, "tickRotation": 0},
+            )
+        
+        # Gráfico de líneas (Precio por Producto)
+        with mui.Box(sx={"height": 300}, key="line_chart"):
+            nivo.Line(
+                data=[{"id": "Precio", "data": line_chart_data}],
+                xScale={"type": "point"},
+                yScale={"type": "linear", "min": "auto", "max": "auto", "stacked": True, "reverse": False},
+                axisBottom={"tickSize": 5, "tickPadding": 5, "tickRotation": 0},
+                axisLeft={"tickSize": 5, "tickPadding": 5, "tickRotation": 0},
+                colors={"scheme": "set2"},
+                pointSize=10,
+                pointColor={"theme": "background"},
+                pointBorderWidth=2,
+                pointBorderColor={"from": "serieColor"},
+                useMesh=True,
+            )
+        
+        # Gráfico de pastel (Cantidad por Producto)
+        with mui.Box(sx={"height": 300}, key="pie_chart"):
+            nivo.Pie(
+                data=pie_chart_data,
+                margin={"top": 50, "right": 50, "bottom": 50, "left": 50},
+                innerRadius=0.5,
+                padAngle=0.7,
+                cornerRadius=3,
+                colors={ "scheme": "paired" },
+                borderWidth=1,
+                borderColor={"from": "color", "modifiers": [["darker", 0.2]]},
+                radialLabelsSkipAngle=10,
+                radialLabelsTextColor="#333333",
+                radialLabelsLinkColor={"from": "color"},
+                sliceLabelsSkipAngle=10,
+                sliceLabelsTextColor="#333333",
             )
 
 
