@@ -46,6 +46,10 @@ pie_chart_data = [
     for _, row in df.iterrows()
 ]
 
+# Función para generar colores aleatorios
+def random_color():
+    return f"#{random.randint(0, 0xFFFFFF):06x}"
+
 # Crear el dashboard
 with elements("dashboard"):
     with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
@@ -97,7 +101,7 @@ with elements("dashboard"):
                 useMesh=True,
             )
         
-        # Gráfico de pastel (Cantidad por Producto)
+        # Gráfico de pastel (Cantidad por Producto) con colores aleatorios
         with mui.Box(sx={"height": 300}, key="pie_chart"):
             nivo.Pie(
                 data=pie_chart_data,
@@ -105,7 +109,6 @@ with elements("dashboard"):
                 innerRadius=0.5,
                 padAngle=0.7,
                 cornerRadius=3,
-                colors={"scheme": "paired"},
                 borderWidth=1,
                 borderColor={"from": "color", "modifiers": [["darker", 0.2]]},
                 radialLabelsSkipAngle=0,  # Mostrar todas las etiquetas
@@ -117,6 +120,7 @@ with elements("dashboard"):
                 enableSliceLabels=True,  # Habilitar etiquetas en las rebanadas
                 sliceLabelsSkipAngle=0,  # Mostrar etiquetas dentro de las rebanadas
                 sliceLabelsTextColor="#333333",
+                colors=[random_color() for _ in pie_chart_data],  # Colores aleatorios para las rebanadas
                 legends=[
                     {
                         "anchor": "bottom",
