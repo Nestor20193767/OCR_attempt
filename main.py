@@ -13,7 +13,7 @@ with elements("dashboard"):
         { "taste": "sunny", "chardonay": 119, "carmenere": 94, "syrah": 103 },
     ]
 
-    from streamlit_elements import dashboard
+
 
     # First, build a default layout for every element you want to include in your dashboard
 
