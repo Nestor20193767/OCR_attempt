@@ -109,11 +109,12 @@ with elements("dashboard"):
                 borderWidth=1,
                 borderColor={"from": "color", "modifiers": [["darker", 0.2]]},
                 radialLabelsSkipAngle=0,  # Mostrar todas las etiquetas
-                radialLabelsTextColor="#333333",
+                radialLabelsTextColor="#000000",
                 radialLabelsLinkColor={"from": "color"},
                 radialLabelsLinkStrokeWidth=1,
                 radialLabelsLinkDiagonalLength=16,  # Ajustar la longitud diagonal
                 radialLabelsLinkHorizontalLength=24,  # Ajustar la longitud horizontal
+                enableSliceLabels=True,  # Habilitar etiquetas en las rebanadas
                 sliceLabelsSkipAngle=0,  # Mostrar etiquetas dentro de las rebanadas
                 sliceLabelsTextColor="#333333",
                 legends=[
