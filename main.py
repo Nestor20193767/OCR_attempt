@@ -105,14 +105,38 @@ with elements("dashboard"):
                 innerRadius=0.5,
                 padAngle=0.7,
                 cornerRadius=3,
-                colors={ "scheme": "paired" },
+                colors={"scheme": "paired"},
                 borderWidth=1,
                 borderColor={"from": "color", "modifiers": [["darker", 0.2]]},
-                radialLabelsSkipAngle=10,
+                radialLabelsSkipAngle=0,  # Mostrar todas las etiquetas
                 radialLabelsTextColor="#333333",
                 radialLabelsLinkColor={"from": "color"},
-                sliceLabelsSkipAngle=10,
+                radialLabelsLinkStrokeWidth=1,
+                radialLabelsLinkDiagonalLength=16,  # Ajustar la longitud diagonal
+                radialLabelsLinkHorizontalLength=24,  # Ajustar la longitud horizontal
+                sliceLabelsSkipAngle=0,  # Mostrar etiquetas dentro de las rebanadas
                 sliceLabelsTextColor="#333333",
+                legends=[
+                    {
+                        "anchor": "bottom",
+                        "direction": "row",
+                        "translateX": 0,
+                        "translateY": 50,
+                        "itemWidth": 100,
+                        "itemHeight": 20,
+                        "itemTextColor": "#999",
+                        "symbolSize": 12,
+                        "symbolShape": "circle",
+                        "effects": [
+                            {
+                                "on": "hover",
+                                "style": {
+                                    "itemTextColor": "#000"
+                                }
+                            }
+                        ]
+                    }
+                ],
             )
 
 
