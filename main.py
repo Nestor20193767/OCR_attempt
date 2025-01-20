@@ -1,77 +1,29 @@
 import streamlit as st
-from streamlit_elements import elements, mui
-import pandas as pd
 
-def create_reminder_papers_with_scroll(df):
-    """
-    Generates mui.Paper elements for reminders and displays them in a scrollable mui.Box.
+st.title("Echo Bot")
 
-    Parameters:
-        df (pd.DataFrame): DataFrame with columns 'Recordatorio', 'Fecha', and 'Estado'.
-    """
-    st.title("Gestor de Recordatorios con Scroll")
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-    # Initialize session state for the DataFrame
-    if "df" not in st.session_state:
-        st.session_state.df = df
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-    # Function to mark a reminder as completed
-    def mark_completed(index):
-        st.session_state.df.loc[index, 'Estado'] = True
+# React to user input
+if prompt := st.chat_input("What is up?"):
+    # Display user message in chat message container
+    st.chat_message("user").markdown(prompt)
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Split into two columns
-    col1, col2 = st.columns(2)
-
-    # Left Column: Display the DataFrame
-    with col1:
-        st.header("Estado del DataFrame")
-        st.dataframe(st.session_state.df)
-
-    # Right Column: Display the Papers in a scrollable Box
-    with col2:
-        st.header("Recordatorios")
-
-        with elements("mui-papers"):
-            # mui.Box with scroll
-            with mui.Box(
-                sx={
-                    "height": "400px",  # Fixed height for the box
-                    "overflowY": "scroll",  # Enable vertical scrolling
-                    "padding": "16px",
-                    "border": "1px solid #ccc",
-                    "backgroundColor": "#f9f9f9",
-                }
-            ):
-                for idx, row in st.session_state.df.iterrows():
-                    unique_key = f"reminder-{idx}"  # Unique key for each paper
-                    
-                    # Render each Paper
-                    with mui.Paper(
-                        elevation=3,
-                        sx={"padding": "16px", "marginBottom": "16px"},
-                        key=unique_key
-                    ):
-                        mui.Typography(row['Recordatorio'], variant="h6")
-                        mui.Typography(f"Fecha: {row['Fecha']}", variant="body2")
-                        
-                        # Show "Completado" button only if Estado is False
-                        if not row['Estado']:
-                            mui.Button(
-                                "Completado",
-                                color="primary",
-                                onClick=lambda idx=idx: mark_completed(idx)
-                            )
-                        else:
-                            mui.Typography("Estado: Completado", color="green", variant="body2")
-
-
-# Example usage
-data = {
-    "Recordatorio": [f"Tarea {i}" for i in range(1, 51)],  # 50 reminders to test scroll
-    "Fecha": [f"2025-01-{str(i % 31 + 1).zfill(2)}" for i in range(1, 51)],  # Cyclic dates
-    "Estado": [False] * 50
-}
-df = pd.DataFrame(data)
+    response = f"Echo: {prompt}"
+    # Display assistant response in chat message container
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    # Add assistant response to chat history
+    st.session_state.messages.append({"role": "assistant", "content": response})
 
 # Call the function
 create_reminder_papers_with_scroll(df)
