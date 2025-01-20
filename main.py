@@ -2,6 +2,7 @@ import streamlit as st
 logo_url = "https://raw.githubusercontent.com/Nestor20193767/imagenesYLogos/main/Quios/QuiosLogo.png"
 
 st.title("Echo Bot")
+st.image(logo_url)
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -24,6 +25,7 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         st.markdown(response)
         st.markdown("Cacatua")
+        st.image(logo_url )
         if response == "Muestrame una imagen":
             st.image(logo_url )
     # Add assistant response to chat history
