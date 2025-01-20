@@ -24,7 +24,6 @@ if prompt := st.chat_input("What is up?"):
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         st.markdown(response)
-        st.markdown("Cacatua")
         #st.image(logo_url )
         if response == "Echo: Muestrame una imagen":
             st.image(logo_url)
