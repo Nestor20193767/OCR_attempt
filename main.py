@@ -25,7 +25,6 @@ if prompt := st.chat_input("What is up?"):
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
 
-# Call the function
-create_reminder_papers_with_scroll(df)
+
 
 
