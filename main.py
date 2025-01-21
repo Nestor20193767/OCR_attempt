@@ -1,11 +1,12 @@
 import streamlit as st
-from streamlit_elements import elements, dashboard, html, nivo, mui
+from streamlit_elements import elements, dashboard, mui
 
+# URL del logo
 logo_url = "https://raw.githubusercontent.com/Nestor20193767/imagenesYLogos/main/Quios/QuiosLogo.png"
 
 st.title("Echo Bot")
 
-# Initialize chat history
+# Inicializar historial de chat
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -16,38 +17,32 @@ layout = dashboard.Item("Chatbot", 0, 0, 6, 3)
 def handle_layout_change(updated_layout):
     print("Layout actualizado:", updated_layout)
 
-# Crear el dashboard con elementos de Streamlit Elements
+# Crear el dashboard con elementos
 with elements("data_analysis"):
     with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
-
-        # Contenedor principal para el chat
-        with mui.Paper(
+        with mui.Box(
             sx={
                 "display": "flex",
                 "flexDirection": "column",
-                "borderRadius": 3,
+                "borderRadius": "10px",
                 "overflow": "hidden",
+                "border": "1px solid #ccc",
                 "height": "100%",
             },
-            elevation=4,
-            key="chat_container",
+            key="chat_box",
         ):
-
-            # Barra de título
+            # Título del chatbot
             with mui.Box(
                 sx={
-                    "display": "flex",
-                    "alignItems": "center",
                     "backgroundColor": "#f4f4f4",
                     "padding": "10px",
-                    "borderBottom": "2px solid #ddd",
+                    "borderBottom": "1px solid #ddd",
                 },
                 key="chat_title",
             ):
-                mui.icon.SignalCellularAlt(sx={"fontSize": 24, "marginRight": "10px"})
-                mui.Typography("Echo Bot", sx={"fontSize": 18, "fontWeight": "bold"})
+                mui.Typography("Echo Bot", sx={"fontSize": 20, "fontWeight": "bold"})
 
-            # Contenedor para los mensajes del chat
+            # Contenedor de mensajes
             with mui.Box(
                 sx={
                     "flex": 1,
@@ -57,7 +52,6 @@ with elements("data_analysis"):
                 },
                 key="chat_messages",
             ):
-                # Mostrar los mensajes del historial
                 for message in st.session_state.messages:
                     role_style = (
                         {"color": "blue"} if message["role"] == "user" else {"color": "green"}
@@ -67,25 +61,26 @@ with elements("data_analysis"):
                         sx={"marginBottom": "8px", **role_style},
                     )
 
-            # Entrada del chat
+            # Input del chat
             with mui.Box(
                 sx={
-                    "display": "flex",
                     "padding": "10px",
-                    "borderTop": "2px solid #ddd",
+                    "borderTop": "1px solid #ddd",
                     "backgroundColor": "#f4f4f4",
+                    "display": "flex",
+                    "alignItems": "center",
                 },
                 key="chat_input",
             ):
+                # Input y envío de mensajes
                 prompt = st.text_input("Escribe tu mensaje aquí:", key="chat_input_field")
                 if prompt:
-                    # Agregar el mensaje del usuario al historial
+                    # Agregar mensaje del usuario al historial
                     st.session_state.messages.append({"role": "user", "content": prompt})
 
                     # Respuesta del bot
                     response = f"Echo: {prompt}"
                     st.session_state.messages.append({"role": "assistant", "content": response})
-
 
 
 
