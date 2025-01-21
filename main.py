@@ -66,10 +66,11 @@ def mostrar_chatbot(logo_url):
                     # Agregar la respuesta al historial
                     st.session_state.messages.append({"role": "assistant", "type": "text", "content": response})
                     
+
+
 # Renderizar la interfaz en Streamlit Elements
- with elements("chatbot_section"):
-     mostrar_chatbot(logo_url)
-                        
+with elements("chatbot_section"):
+    mostrar_chatbot()
 # --------------------------------------------------------------
 
 
