@@ -4,67 +4,88 @@ from streamlit_elements import elements, dashboard, html, nivo, mui
 logo_url = "https://raw.githubusercontent.com/Nestor20193767/imagenesYLogos/main/Quios/QuiosLogo.png"
 
 st.title("Echo Bot")
-#st.image(logo_url)
 
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-st.write("cambie")
-
-# --------------------------------------------------------------
-
+# Layout del dashboard
 layout = dashboard.Item("Chatbot", 0, 0, 6, 3)
+
 # Callback para manejar cambios en el layout
 def handle_layout_change(updated_layout):
-            print("Layout actualizado:", updated_layout)
+    print("Layout actualizado:", updated_layout)
 
-
-
-
-
-   # Crear el dashboard con elementos de Nivo
+# Crear el dashboard con elementos de Streamlit Elements
 with elements("data_analysis"):
-            with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
+    with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
 
-                with mui.Paper(sx={"display": "flex", "flexDirection": "column", "borderRadius": 3, "overflow": "hidden"}, elevation=4, key="cantidad_bars"):
+        # Contenedor principal para el chat
+        with mui.Paper(
+            sx={
+                "display": "flex",
+                "flexDirection": "column",
+                "borderRadius": 3,
+                "overflow": "hidden",
+                "height": "100%",
+            },
+            elevation=4,
+            key="chat_container",
+        ):
 
-                    # Barra de título con icono y texto en la misma línea
-                    with mui.Box(sx={"display": "flex", "alignItems": "center", "backgroundColor": "#f4f4f4", 
-                                     "padding": "10px", "borderBottom": "2px solid #ddd", "overflowY": "scroll"},
-                                key="titulo_cantidad_bar"):
-                        # Icono
-                        mui.icon.SignalCellularAlt(sx={"fontSize": 24, "marginRight": "10px"})
-                        
-                        # Título
-                        mui.Typography("Echo bot", sx={"fontSize": 18, "fontWeight": "bold"})
+            # Barra de título
+            with mui.Box(
+                sx={
+                    "display": "flex",
+                    "alignItems": "center",
+                    "backgroundColor": "#f4f4f4",
+                    "padding": "10px",
+                    "borderBottom": "2px solid #ddd",
+                },
+                key="chat_title",
+            ):
+                mui.icon.SignalCellularAlt(sx={"fontSize": 24, "marginRight": "10px"})
+                mui.Typography("Echo Bot", sx={"fontSize": 18, "fontWeight": "bold"})
 
-                    # Gráfico de productos con bajo stock (actualizado para mostrar todos los productos)
-                    with mui.Box(sx={"height": "90%"}, key="low_stock_chart"):
+            # Contenedor para los mensajes del chat
+            with mui.Box(
+                sx={
+                    "flex": 1,
+                    "padding": "10px",
+                    "overflowY": "auto",
+                    "backgroundColor": "#ffffff",
+                },
+                key="chat_messages",
+            ):
+                # Mostrar los mensajes del historial
+                for message in st.session_state.messages:
+                    role_style = (
+                        {"color": "blue"} if message["role"] == "user" else {"color": "green"}
+                    )
+                    mui.Typography(
+                        f"{message['role'].capitalize()}: {message['content']}",
+                        sx={"marginBottom": "8px", **role_style},
+                    )
 
-                        # Display chat messages from history on app rerun
-                        for message in st.session_state.messages:
-                            with st.chat_message(message["role"]):
-                                st.markdown(message["content"])
-                        
-                        # React to user input
-                        if prompt := st.chat_input("What is up?"):
-                            # Display user message in chat message container
-                            st.chat_message("user").markdown(prompt)
-                            # Add user message to chat history
-                            st.session_state.messages.append({"role": "user", "content": prompt})
-                        
-                            response = f"Echo: {prompt}"
-                            # Display assistant response in chat message container
-                            with st.chat_message("assistant"):
-                                st.markdown(response)
-                                #st.image(logo_url )
-                                if response == "Echo: Muestrame una imagen":
-                                    st.image(logo_url)
-                                
-                            # Add assistant response to chat history
-                            st.session_state.messages.append({"role": "assistant", "content": response})
-                        
+            # Entrada del chat
+            with mui.Box(
+                sx={
+                    "display": "flex",
+                    "padding": "10px",
+                    "borderTop": "2px solid #ddd",
+                    "backgroundColor": "#f4f4f4",
+                },
+                key="chat_input",
+            ):
+                prompt = st.text_input("Escribe tu mensaje aquí:", key="chat_input_field")
+                if prompt:
+                    # Agregar el mensaje del usuario al historial
+                    st.session_state.messages.append({"role": "user", "content": prompt})
+
+                    # Respuesta del bot
+                    response = f"Echo: {prompt}"
+                    st.session_state.messages.append({"role": "assistant", "content": response})
+
 
 
 
