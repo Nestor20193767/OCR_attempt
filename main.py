@@ -10,6 +10,8 @@ st.title("Echo Bot")
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+st.write("cambie")
+
 # --------------------------------------------------------------
 
 layout = dashboard.Item("Chatbot", 0, 0, 6, 3)
