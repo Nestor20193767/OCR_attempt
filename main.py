@@ -14,11 +14,15 @@ if "messages" not in st.session_state:
 
 layout = dashboard.Item("Chatbot", 0, 0, 6, 3)
 # Callback para manejar cambios en el layout
-        def handle_layout_change(updated_layout):
+def handle_layout_change(updated_layout):
             print("Layout actualizado:", updated_layout)
-        
-        # Crear el dashboard con elementos de Nivo
-        with elements("data_analysis"):
+
+
+
+
+
+   # Crear el dashboard con elementos de Nivo
+with elements("data_analysis"):
             with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
 
                 with mui.Paper(sx={"display": "flex", "flexDirection": "column", "borderRadius": 3, "overflow": "hidden"}, elevation=4, key="cantidad_bars"):
