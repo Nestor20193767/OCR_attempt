@@ -1,87 +1,60 @@
-import streamlit as st
-from streamlit_elements import elements, dashboard, mui
+tengo este codigo: import streamlit as st
+from streamlit_elements import elements, dashboard, html, nivo, mui
 
-# URL del logo
 logo_url = "https://raw.githubusercontent.com/Nestor20193767/imagenesYLogos/main/Quios/QuiosLogo.png"
 
 st.title("Echo Bot")
+#st.image(logo_url)
 
-# Inicializar historial de chat
+# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Layout del dashboard
-layout = dashboard.Item("Chatbot", 0, 0, 6, 3)
+# Mostrar historial de mensajes
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        if message["type"] == "text":
+            st.markdown(message["content"])
+        elif message["type"] == "image":
+            st.image(message["content"])
 
-# Callback para manejar cambios en el layout
-def handle_layout_change(updated_layout):
-    print("Layout actualizado:", updated_layout)
+# Capturar la entrada del usuario
+if prompt := st.chat_input("What is up?"):
+    # Mostrar el mensaje del usuario en la interfaz
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    # Agregar el mensaje del usuario al historial como texto
+    st.session_state.messages.append({"role": "user", "type": "text", "content": prompt})
 
-# Crear el dashboard con elementos
-with elements("data_analysis"):
-    with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
-        with mui.Box(
-            sx={
-                "display": "flex",
-                "flexDirection": "column",
-                "borderRadius": "10px",
-                "overflow": "hidden",
-                "border": "1px solid #ccc",
-                "height": "100%",
-            },
-            key="chat_box",
-        ):
-            # Título del chatbot
-            with mui.Box(
-                sx={
-                    "backgroundColor": "#f4f4f4",
-                    "padding": "10px",
-                    "borderBottom": "1px solid #ddd",
-                },
-                key="chat_title",
-            ):
-                mui.Typography("Echo Bot", sx={"fontSize": 20, "fontWeight": "bold"})
+    # Generar la respuesta del bot
+    if prompt.lower() == "muestrame una imagen":
+        response = "Aquí tienes una imagen:"
+        image_url = "https://raw.githubusercontent.com/Nestor20193767/imagenesYLogos/main/Quios/QuiosLogo.png"
+        
+        # Mostrar la respuesta del bot en la interfaz
+        with st.chat_message("assistant"):
+            st.markdown(response)
+            st.image(image_url)
 
-            # Contenedor de mensajes
-            with mui.Box(
-                sx={
-                    "flex": 1,
-                    "padding": "10px",
-                    "overflowY": "auto",
-                    "backgroundColor": "#ffffff",
-                },
-                key="chat_messages",
-            ):
-                for message in st.session_state.messages:
-                    role_style = (
-                        {"color": "blue"} if message["role"] == "user" else {"color": "green"}
-                    )
-                    mui.Typography(
-                        f"{message['role'].capitalize()}: {message['content']}",
-                        sx={"marginBottom": "8px", **role_style},
-                    )
+        # Agregar respuesta y imagen al historial
+        st.session_state.messages.append({"role": "assistant", "type": "text", "content": response})
+        st.session_state.messages.append({"role": "assistant", "type": "image", "content": image_url})
+    else:
+        response = f"Echo: {prompt}"
+        
+        # Mostrar la respuesta del bot en la interfaz
+        with st.chat_message("assistant"):
+            st.markdown(response)
 
-            # Input del chat
-            with mui.Box(
-                sx={
-                    "padding": "10px",
-                    "borderTop": "1px solid #ddd",
-                    "backgroundColor": "#f4f4f4",
-                    "display": "flex",
-                    "alignItems": "center",
-                },
-                key="chat_input",
-            ):
-                # Input y envío de mensajes
-                prompt = st.text_input("Escribe tu mensaje aquí:", key="chat_input_field")
-                if prompt:
-                    # Agregar mensaje del usuario al historial
-                    st.session_state.messages.append({"role": "user", "content": prompt})
+        # Agregar la respuesta del bot al historial
+        st.session_state.messages.append({"role": "assistant", "type": "text", "content": response})
 
-                    # Respuesta del bot
-                    response = f"Echo: {prompt}"
-                    st.session_state.messages.append({"role": "assistant", "content": response})
+                            
+                        
+# --------------------------------------------------------------
 
+
+                        
 
 
 
