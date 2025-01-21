@@ -5,7 +5,7 @@ logo_url = "https://raw.githubusercontent.com/Nestor20193767/imagenesYLogos/main
 
 
 # Función para mostrar el chatbot dentro de un Paper y un Box
-def mostrar_chatbot():
+def mostrar_chatbot(logo_url):
     """
     Muestra el chatbot dentro de un Paper y un Box con scroll.
     """
@@ -68,7 +68,7 @@ def mostrar_chatbot():
                     
 # Renderizar la interfaz en Streamlit Elements
  with elements("chatbot_section"):
-    mostrar_chatbot()
+     mostrar_chatbot(logo_url)
                         
 # --------------------------------------------------------------
 
