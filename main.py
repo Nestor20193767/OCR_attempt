@@ -1,4 +1,4 @@
-tengo este codigo: import streamlit as st
+import streamlit as st
 from streamlit_elements import elements, dashboard, html, nivo, mui
 
 logo_url = "https://raw.githubusercontent.com/Nestor20193767/imagenesYLogos/main/Quios/QuiosLogo.png"
