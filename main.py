@@ -70,7 +70,7 @@ def mostrar_chatbot(logo_url):
 
 # Renderizar la interfaz en Streamlit Elements
 with elements("chatbot_section"):
-    mostrar_chatbot()
+    mostrar_chatbot(logo_url)
 # --------------------------------------------------------------
 
 
